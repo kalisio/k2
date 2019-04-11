@@ -1,0 +1,39 @@
+{
+  "name": "k2",
+  "description": "3D terrain server for Cesium tiles",
+  "version": "0.1.0",
+  "main": "index.js",
+  "bin": "index.js",
+  "homepage": "https://github.com/kalisio/k2",
+  "keywords": [
+    "kargo",
+    "cesium"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kalisio/k2.git"
+  },
+  "author": {
+    "name": "Kalisio",
+    "url": "https://github.com/kalisio"
+  },
+  "contributors": [],
+  "bugs": {
+    "url": "https://github.com/kalisio/k2/issues"
+  },
+  "scripts": {
+    "start": "node .",
+    "test": "echo \"Warning: no test specified\"",
+    "postversion": "git push origin --tags",
+    "release:patch": "npm version --force patch",
+    "release:minor": "npm version --force minor",
+    "release:major": "npm version --force major"
+  },
+  "dependencies": {
+    "@mapbox/mbtiles": "^0.10.0",
+    "cors": "^2.8.5",
+    "express": "^4.16.4"
+  },
+  "devDependencies": {}
+}

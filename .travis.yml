@@ -1,0 +1,17 @@
+language: node_js
+node_js:
+- '8'
+sudo: required
+services:
+- docker
+notifications:
+  email: false
+  slack:
+    on_success: always
+    on_failure: always
+script:
+- export VERSION=$(node -p -e "require('./package.json').version")
+- docker build -t kalisio/k2 .
+- docker tag kalisio/k2 kalisio/k2:$VERSION
+- docker login -u="$DOCKER_USER" -p="$DOCKER_PASSWORD"
+- docker push kalisio/k2:$VERSION
