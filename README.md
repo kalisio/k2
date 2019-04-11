@@ -1,26 +1,17 @@
-# k-maputnik
+# k2
 
-[![Build Status](https://travis-ci.org/kalisio/k-maputnik.png?branch=master)](https://travis-ci.org/kalisio/k-maputnik)
+[![Build Status](https://travis-ci.org/kalisio/k2.png?branch=master)](https://travis-ci.org/kalisio/k2)
 
-A docker container that runs the [Maputnik](https://github.com/maputnik/editor) application, notably allows for version management and fixes [this issue](https://github.com/maputnik/editor/issues/301).
-
-> This project is influenced by the project docker recipe
+A docker container that runs a 3D terrain tile server for Cesium.
 
 ## Building
 
 ### Manual build 
 
-To build the image, you are required to define the following variables:
-
-| Variable  | Description |
-|-----------| ------------|
-| `MAPUTNIK_VERSION` | the Maputnik version you want to build |
-
-Then you can build the image with the following command:
+You can build the image with the following command:
 
 ```bash
-export MAPUTNIK_VERSION=1.4.0
-docker build --build-arg VERSION=$MAPUTNIK_VERSION -t <your-image-name> .
+docker build -t <your-image-name> .
 ```
 
 ### Automatic build using Travis CI
@@ -32,7 +23,6 @@ To enable Travis to do the job, you must define the following variable in the co
 
 | Variable  | Description |
 |-----------| ------------|
-| `MAPUTNIK_VERSION` | `1.4.0` |
 | `DOCKER_USER` | your username |
 | `DOCKER_PASSWORD` | your password |
 
@@ -40,7 +30,7 @@ To enable Travis to do the job, you must define the following variable in the co
 
 This image is designed to be deployed using the [Kargo](https://kalisio.github.io/kargo/) project.
 
-Check out the [compose file](https://github.com/kalisio/kargo/blob/master/deploy/maputnik.yml) to have an overview on how the container is deployed.
+Check out the [compose file](https://github.com/kalisio/kargo/blob/master/deploy/k2.yml) to have an overview on how the container is deployed.
 
 ## Contributing
 
