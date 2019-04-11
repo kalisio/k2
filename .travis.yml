@@ -9,6 +9,8 @@ notifications:
   slack:
     on_success: always
     on_failure: always
+    rooms:
+      secure: xA3fcE2Paag088hwZfgluBqvu+wp7ZYJfUtpe0/xrq7AEB1yUmmmLkED8YSusEQoyTVoD9e+iY9mcpswvhnGCY7ox4KyJZ44VF5h0cr0cqFjQjTmzgmcuhRIsOS++icFEAOnejV7Ntpp1RI6xQQfBuecIr3NJC5zDQcXTobhvy/ItDOSQek1YNcpVDtSCxw/LI8CNb7Zs8ftZI4hjoA9lUC+3Vgn+WzR28uGgDd30EdyW6EerA8YrLhiHUZZkj57ms2M4nzvFHYynPLBIf6Ah1IPuQK81LF5o8Yj8H3h+Ww3o5/nbJkY7YgoRK1kGwh3WzdJF6eX2bkCKzFMe3T3gGBauLKkNgZAZc+7EX4P5Go+QgV5bHGaP1xYHysMiOowX67PvioVoqQEe/hHxmA/KMPKj5qiYvy8NuugnESRstdyauJFOg8ruYlBrKpTXOVrWvsW4LeCRvxcbFOLtZ/bJR6MtdvBGDhRwvF3Zq9H4CTLirRnr9wC+cm6SAPGnGMU9EPYibPAb0SnNqGA8JfMhf3mW8Q2sWc9AAld0mRNuqIfoWiSwQbuvRBUL7Cqtpgn26bInbeVo8+o9K/Pw1l2BF7Tj8RLaZTq0Jpx4bnbfUoAb83nrU8A5uPws/coDFxSMipT4xbmmgEwN5i/sFoOTChDUD/ivUH09edOxExbG84=
 script:
 - export VERSION=$(node -p -e "require('./package.json').version")
 - docker build -t kalisio/k2 .
