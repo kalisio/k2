@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/kalisio/k2.png?branch=master)](https://travis-ci.org/kalisio/k2)
 
-A docker container that runs a 3D terrain tile server for Cesium.
+A docker container that runs a 3D terrain tiles server stored as quantized meshes in MBTiles for Cesium.
 
 ## Building
 
