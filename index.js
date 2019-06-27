@@ -30,6 +30,7 @@ new MBTiles(terrainFile, (err, mbtiles) => {
     mbtiles.getInfo((err, data) => {
       res.set('Content-Type', 'application/json')
       data['tiles'] = ['{z}/{x}/{y}.terrain'] // add valid "tiles" URLs
+      data['format'] = 'quantized-mesh-1.0'
       res.send(data)
     })
   })
