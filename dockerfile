@@ -1,7 +1,7 @@
 FROM node:8-buster-slim
 LABEL maintainer "<contact@kalisio.xyz>"
 
-EXPOSE 8888
+EXPOSE 8080
 
 ENV HOME /k2
 RUN mkdir ${HOME}
