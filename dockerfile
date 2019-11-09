@@ -10,6 +10,6 @@ COPY . ${HOME}
 
 WORKDIR ${HOME}
 
-RUN npm install
+RUN yarn
 
 CMD npm run start
