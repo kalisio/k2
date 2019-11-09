@@ -1,11 +1,5 @@
-FROM node:8-stretch
-
-MAINTAINER Kalisio <contact@kalisio.xyz>
-
-ARG VERSION
-ENV BRANCH=v$VERSION
-
-RUN echo "Building K2 $BRANCH"
+FROM node:8-buster-slim
+LABEL maintainer "<contact@kalisio.xyz>"
 
 EXPOSE 8888
 

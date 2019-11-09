@@ -14,3 +14,6 @@ yarn-error.log*
 # Node modules
 node_modules
 
+# Other files
+k2.png
+
