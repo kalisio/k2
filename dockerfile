@@ -1,4 +1,4 @@
-FROM node:8-buster-slim
+FROM node:12.16-buster-slim
 LABEL maintainer "<contact@kalisio.xyz>"
 
 EXPOSE 8080
