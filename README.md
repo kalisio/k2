@@ -1,6 +1,6 @@
 # k2
 
-[![Build Status](https://travis-ci.org/kalisio/k2.png?branch=master)](https://travis-ci.org/kalisio/k2)
+[![Build Status](https://travis-ci.com/kalisio/k2.png?branch=master)](https://travis-ci.com/kalisio/k2)
 
 ![Image](./k2.png)
 
