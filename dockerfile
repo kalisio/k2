@@ -1,8 +1,8 @@
-FROM node:12.16-buster-slim
+FROM node:12.22-bullseye-slim
 LABEL maintainer "<contact@kalisio.xyz>"
 
 # Install curl for healthechk purpose
-RUN apt-get -y update && apt-get -y install curl
+RUN apt-get -y update && apt-get -y install curl gdal-bin
 
 EXPOSE 8080
 
@@ -15,4 +15,4 @@ WORKDIR ${HOME}
 
 RUN yarn
 
-CMD npm run start
+CMD yarn run start
