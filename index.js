@@ -9,7 +9,7 @@ const { elevation } = require('./elevation')
 
 const port = process.env.PORT || 8080
 const terrainFile = process.env.TERRAIN_FILEPATH || path.join('/mbtiles', 'terrain.mbtiles')
-const demFile = process.env.DEM_FILEPATH || path.join('/dem', 'dem.vrt')
+const demFile = process.env.DEM_FILEPATH || path.join('/mbtiles', 'dem.vrt')
 
 var app = express()
 app.use(cors()) // add CORS headers -- required
