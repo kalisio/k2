@@ -82,7 +82,9 @@ async function elevation(geojson, dem, resolution) {
   const workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'elevation-'))
   // console.log(`workDir=${workDir}`)
 
-  const feature = geojson.features[0]
+  let feature
+  if (geojson.type === 'FeatureCollection') feature = geojson.features[0]
+  else feature = geojson
 
   // foreach segment, generate elevation profile as tiff
   // compute segment's length, generate as many point to match

@@ -5,23 +5,33 @@ var cors = require('cors')
 var express = require('express')
 var MBTiles = require('@mapbox/mbtiles')
 const compression = require('compression')
-const { elevation } = require('./elevation')
+const { elevation } = require('./src/elevation')
+const { validateGeoJson } = require('./src/utils.geojson.js')
 
 const port = process.env.PORT || 8080
+const bodyLimit = process.env.BODY_LIMIT || '100kb'
 const terrainFile = process.env.TERRAIN_FILEPATH || path.join('/mbtiles', 'terrain.mbtiles')
 const demFile = process.env.DEM_FILEPATH || path.join('/mbtiles', 'dem.vrt')
 
+// features validator middleware
+const geoJsonValidator = function (req, res, next) {
+  if (req.body.type === 'FeatureCollection' || req.body.type === 'Feature') {
+    const errors = validateGeoJson(req.body)
+    if (errors.length > 0) res.status(422).json({ message: 'Invdalid \"GeoJSON\"', errors })
+    else next()
+  } else {
+    next()
+  }
+}
+
 var app = express()
-app.use(cors()) // add CORS headers -- required
+app.use(cors()) // enable cors
+app.use(express.urlencoded({ limit: bodyLimit, extended: true }))
+app.use(express.json({ limit: bodyLimit }))
 app.use(compression())
-app.use(express.json())
 
 new MBTiles(terrainFile, (err, mbtiles) => {
-  // if (err) {
-  //   console.log(err)
-  //   process.exit(1)
-  //   return
-  // }
+
   // Serve individual tiles
   app.get('/:z/:x/:y.terrain', (req, res) => {
     mbtiles.getTile(req.params.z, req.params.x, req.params.y, function(err, data) {
@@ -32,6 +42,7 @@ new MBTiles(terrainFile, (err, mbtiles) => {
       res.send(data)
     })
   })
+
   // Serve metadata
   app.get('/layer.json', (req, res) => {
     mbtiles.getInfo((err, data) => {
@@ -41,23 +52,25 @@ new MBTiles(terrainFile, (err, mbtiles) => {
       res.send(data)
     })
   })
-  // Healthcheck
-  app.get('/healthcheck', (req, res) => {
-    res.set('Content-Type', 'application/json')
-    return res.status(200).json({ isRunning: true })
-  })
 
   app.get('/elevationat', (req, res) => {
     return res.status(200).json({ foo: false })
   })
 
-  app.post('/elevation', async (req, res) => {
+  // Elevation
+  app.post('/elevation', [geoJsonValidator], async (req, res) => {
     const result = await elevation(req.body, demFile, req.query.resolution)
     return res.status(200).json(result)
   })
 
+  // Healthcheck
+  app.get('/healthcheck', (req, res) => {
+    res.set('Content-Type', 'application/json')
+    return res.status(200).json({ isRunning: true })
+  })  
+
   // Start the server
   app.listen(port, () => {
-    console.log('K2 terrain server listening at %d', port)
+    console.log('[K2] server listening at %d (body limit %s)', port, bodyLimit)
   })
 })
