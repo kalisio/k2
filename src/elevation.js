@@ -2,6 +2,7 @@ const makeDebug = require('debug')
 const child_process = require('child_process')
 const os = require('os')
 const fs = require('fs')
+const _ = require('lodash')
 const path = require('path')
 const turf_along = require('@turf/along').default
 const turf_length = require('@turf/length').default
