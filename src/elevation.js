@@ -81,12 +81,14 @@ async function parallel_exec(tasklist, concurrency) {
 
 // based on https://kokoalberti.com/articles/creating-elevation-profiles-with-gdal-and-two-point-equidistant-projection/
 async function elevation(geojson, dem) {
+  console.log('[K2] elevation requested')
    // prepare work folder
   const workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'elevation-'))
   debug(`working directory: ${workDir}`)
 
-  // Extract parameters
+  // Extract computing parameters
   const resolution = _.get(geojson, 'resolution', 30)
+
   let feature
   if (geojson.type === 'FeatureCollection') feature = geojson.features[0]
   else feature = geojson
