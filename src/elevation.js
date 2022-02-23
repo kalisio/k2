@@ -1,3 +1,4 @@
+const makeDebug = require('debug')
 const child_process = require('child_process')
 const os = require('os')
 const fs = require('fs')
@@ -7,6 +8,8 @@ const turf_length = require('@turf/length').default
 const { point: turf_point, lineString: turf_lineString, featureCollection: turf_featureCollection } = require('@turf/helpers')
 const { segmentEach: turf_segmentEach } = require('@turf/meta')
 const GeoTIFF = require('geotiff');
+
+const debug = makeDebug('k2:elevation')
 
 function shell_scrap(cl) {
   const opts = {
@@ -77,11 +80,13 @@ async function parallel_exec(tasklist, concurrency) {
 }
 
 // based on https://kokoalberti.com/articles/creating-elevation-profiles-with-gdal-and-two-point-equidistant-projection/
-async function elevation(geojson, dem, resolution) {
-  // prepare work folder
+async function elevation(geojson, dem) {
+   // prepare work folder
   const workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'elevation-'))
-  // console.log(`workDir=${workDir}`)
+  debug(`working directory: ${workDir}`)
 
+  // Extract parameters
+  const resolution = _.get(geojson, 'resolution', 30)
   let feature
   if (geojson.type === 'FeatureCollection') feature = geojson.features[0]
   else feature = geojson
@@ -124,6 +129,9 @@ async function elevation(geojson, dem, resolution) {
 
   await parallel_exec(allTasks, 4)
 
+  if (!success) {
+    return { }
+  }
   // we'll have to read each segment as tiff and generate a geojson points from data
   const segments = []
   for (const task of allTasks) {

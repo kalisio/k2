@@ -59,7 +59,10 @@ new MBTiles(terrainFile, (err, mbtiles) => {
 
   // Elevation
   app.post('/elevation', [geoJsonValidator], async (req, res) => {
-    const result = await elevation(req.body, demFile, req.query.resolution)
+    let start = new Date()
+    const result = await elevation(req.body, demFile, resolution )
+    let duration = new Date() - start
+    console.log('<> capture processed in %dms', duration)
     return res.status(200).json(result)
   })
 
