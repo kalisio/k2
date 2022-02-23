@@ -2,6 +2,7 @@ const makeDebug = require('debug')
 const child_process = require('child_process')
 const os = require('os')
 const fs = require('fs')
+const _ = require('lodash')
 const path = require('path')
 const turf_along = require('@turf/along').default
 const turf_length = require('@turf/length').default
@@ -131,9 +132,6 @@ async function elevation(geojson, dem) {
 
   await parallel_exec(allTasks, 4)
 
-  if (!success) {
-    return { }
-  }
   // we'll have to read each segment as tiff and generate a geojson points from data
   const segments = []
   for (const task of allTasks) {
