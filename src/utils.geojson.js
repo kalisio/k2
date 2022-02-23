@@ -1,6 +1,6 @@
-import makeDebug from 'debug'
-import _ from 'lodash'
-import geojsonhint from '@mapbox/geojsonhint'
+const makeDebug = require('debug')
+const _ = require('lodash')
+const geojsonhint = require('@mapbox/geojsonhint')
 
 const debug = makeDebug('k2:utils:geojson')
 

@@ -43,7 +43,8 @@
     "cors": "^2.8.5",
     "debug": "^4.3.3",
     "express": "^4.17.1",
-    "geotiff": "^1.0.8"
+    "geotiff": "^1.0.8",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "generate-changelog": "^1.8.0"
