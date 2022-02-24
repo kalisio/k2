@@ -35,7 +35,7 @@ function exec_bg(exe, args, log_file, { cwd = null, env = null, exit_if_fails = 
     env: env
   }
   const cl = `${exe} ${args.join(' ')} >> ${log_file} 2>&1`
-  console.log(`'${cl}' in '${opts.cwd}'`)
+  debug(`'${cl}' in '${opts.cwd}'`)
   return new Promise((resolve, reject) => {
     child_process.exec(cl, opts, (error, stdout, stderr) => {
       if (error !== null) {
@@ -82,13 +82,13 @@ async function parallel_exec(tasklist, concurrency) {
 
 // based on https://kokoalberti.com/articles/creating-elevation-profiles-with-gdal-and-two-point-equidistant-projection/
 async function elevation(geojson, dem) {
-  console.log('[K2] elevation requested')
+  // Extract computing parameters
+  const resolution = _.get(geojson, 'resolution', 30)
+  console.log('[K2] elevation requested with parameters: ', { resolution })
+
    // prepare work folder
   const workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'elevation-'))
   debug(`working directory: ${workDir}`)
-
-  // Extract computing parameters
-  const resolution = _.get(geojson, 'resolution', 30)
 
   let feature
   if (geojson.type === 'FeatureCollection') feature = geojson.features[0]
@@ -103,7 +103,7 @@ async function elevation(geojson, dem) {
     const [ lon1, lat1 ] = segment.geometry.coordinates[1]
     const length = turf_length(segment, { units: 'kilometers' }) * 1000
     const numPoints = Math.floor(length / resolution)
-    // console.log(`segment ${allTasks.length} ${numPoints} points with res ${resolution} (len=${length} m).`)
+    debug(`segment ${allTasks.length} ${numPoints} points with res ${resolution} (len=${length} m).`)
 
     const outFile = path.join(workDir, `segment_${allTasks.length}.tif`)
     const logFile = path.join(workDir, `segment_${allTasks.length}.log`)
