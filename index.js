@@ -62,7 +62,7 @@ new MBTiles(terrainFile, (err, mbtiles) => {
     let start = new Date()
     const result = await elevation(req.body, demFile)
     let duration = new Date() - start
-    console.log('<> capture processed in %dms', duration)
+    console.log('<> profile computed in %dms', duration)
     return res.status(200).json(result)
   })
 
