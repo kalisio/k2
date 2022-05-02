@@ -11,7 +11,6 @@ const { validateGeoJson } = require('./src/utils.geojson.js')
 const port = process.env.PORT || 8080
 const bodyLimit = process.env.BODY_LIMIT || '100kb'
 const terrainFile = process.env.TERRAIN_FILEPATH || path.join('/mbtiles', 'terrain.mbtiles')
-const demFile = process.env.DEM_FILEPATH || path.join('/mbtiles', 'dem.vrt')
 
 // features validator middleware
 const geoJsonValidator = function (req, res, next) {
@@ -53,14 +52,10 @@ new MBTiles(terrainFile, (err, mbtiles) => {
     })
   })
 
-  app.get('/elevationat', (req, res) => {
-    return res.status(200).json({ foo: false })
-  })
-
   // Elevation
   app.post('/elevation', [geoJsonValidator], async (req, res) => {
     let start = new Date()
-    const result = await elevation(req.body, demFile)
+    const result = await elevation(req.body)
     let duration = new Date() - start
     console.log('<> profile computed in %dms', duration)
     return res.status(200).json(result)

@@ -81,10 +81,17 @@ async function parallel_exec(tasklist, concurrency) {
 }
 
 // based on https://kokoalberti.com/articles/creating-elevation-profiles-with-gdal-and-two-point-equidistant-projection/
-async function elevation(geojson, dem) {
+async function elevation(geojson) {
   // Extract computing parameters
   const resolution = _.get(geojson, 'resolution', 30)
   console.log('[K2] elevation requested with parameters: ', { resolution })
+  const concurrency = _.get(geojson, 'concurrency', 4)
+  const demOverride = _.get(geojson, 'demOverride', '')
+
+  // 1 arc sec is ~30m at the equator
+  // srtmv4 is 3arcsec => ~90m
+  // gmted2010 has 7.5, 15 and 30 arcsec => ~220m
+  const demFile = path.join('/mbtiles', demOverride !== '' ? demOverride : resolution < 220 ? 'srtm.vrt' : 'gmted2010.vrt')
 
    // prepare work folder
   const workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'elevation-'))
@@ -122,7 +129,7 @@ async function elevation(geojson, dem) {
                       '-t_srs', `"${projStr}"`,
                       '-ts', numPoints, '1',
                       '-r', 'max',
-                      dem, outFile ], logFile)
+                      demFile, outFile ], logFile)
       },
       success: () => {},
       fail: () => {}
@@ -130,7 +137,7 @@ async function elevation(geojson, dem) {
     allTasks.push(task)
   })
 
-  await parallel_exec(allTasks, 4)
+  await parallel_exec(allTasks, concurrency)
 
   // we'll have to read each segment as tiff and generate a geojson points from data
   const segments = []
