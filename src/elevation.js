@@ -93,6 +93,8 @@ async function elevation(geojson) {
   // gmted2010 has 7.5, 15 and 30 arcsec => ~220m
   const demFile = path.join('/mbtiles', demOverride !== '' ? demOverride : resolution < 220 ? 'srtm.vrt' : 'gmted2010.vrt')
 
+  debug(`using ${demFile} concurrency ${concurrency}`)
+
    // prepare work folder
   const workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'elevation-'))
   debug(`working directory: ${workDir}`)
