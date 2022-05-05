@@ -90,8 +90,16 @@ async function elevation(geojson) {
 
   // 1 arc sec is ~30m at the equator
   // srtmv4 is 3arcsec => ~90m
-  // gmted2010 has 7.5, 15 and 30 arcsec => ~220m
-  const demFile = path.join('/mbtiles', demOverride !== '' ? demOverride : resolution < 220 ? 'srtm.vrt' : 'gmted2010.vrt')
+  // gmted2010 has 7.5, 15 and 30 arcsec => ~250m, 500 & 1000m
+  let demFile = demOverride
+  if (demFile === '') {
+    // no override, pick dem according to requested resolution
+    if      (resolution <  250) demFile = 'srtm.vrt'
+    else if (resolution <  500) demFile = 'GMTED2010/mx75.tif'
+    else if (resolution < 1000) demFile = 'GMTED2010/mx15.tif'
+    else                        demFile = 'GMTED2010/mx30.tif'
+  }
+  demFile = path.join('/mbtiles', demFile)
 
   debug(`using ${demFile} concurrency ${concurrency}`)
 
