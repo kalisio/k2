@@ -102,18 +102,9 @@ async function elevation(geojson) {
   }
   demFile = path.join('/mbtiles', demFile)
 
-  debug(`using ${demFile} concurrency ${concurrency}`)
+  const halfCorridorWidth = Math.max(1, corridorWidth / 2)
 
-  /**/
-  // compute corridor pixels based on selected demFile
-  let corridorPixels = 0
-  if      (demFile === 'srtm.vrt')           corridorPixels = Math.ceil(corridorWidth / 90)
-  else if (demFile === 'GMTED2010/mx75.tif') corridorPixels = Math.ceil(corridorWidth / 250)
-  else if (demFile === 'GMTED2010/mx15.tif') corridorPixels = Math.ceil(corridorWidth / 500)
-  else                                       corridorPixels = Math.ceil(corridorWidth / 1000)
-  corridorPixels = Math.max(1, corridorPixels)
-  const halfCorridorPixels = Math.ceil(corridorPixels / 2)
-  /**/
+  debug(`using ${demFile} concurrency ${concurrency}`)
 
    // prepare work folder
   const workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'elevation-'))
@@ -147,7 +138,7 @@ async function elevation(geojson) {
         const maxx = cs2csOut[1].split('\t')[0]
 
         return exec_bg('gdalwarp', [
-                      '-te', minx, `-${halfCorridorPixels}`, maxx, halfCorridorPixels,
+                      '-te', minx, `-${halfCorridorWidth}`, maxx, halfCorridorWidth,
                       '-t_srs', `"${projStr}"`,
                       '-ts', numPoints, '1',
                       '-r', 'max',
