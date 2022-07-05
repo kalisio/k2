@@ -126,7 +126,7 @@ async function elevation(geojson) {
     const t1 = (totalDistance + length) / resolution
     const numPoints = 1 + Math.floor(t1) - Math.ceil(t0)
 
-    debug(`segment ${allSegments.length} ${numPoints} points [${Math.ceil(t0)}, ${Math.floor(t1)}] [${t0}, ${t1}] start offset ${t0 - Math.trunc(t0)} `)
+    debug(`segment ${allSegments.length} ${numPoints} points [${Math.ceil(t0)}, ${Math.floor(t1)}] [${t0}, ${t1}] start offset ${Math.ceil(t0) - t0} `)
 
     // we'll have to skip first point on next segment
     // if the endpoint of this segment must be sampled
@@ -137,7 +137,7 @@ async function elevation(geojson) {
     let maxx = length / 2
     let minx = -maxx
     // adjust minx to fall on first sampled point of segment (might not be the first point)
-    minx += resolution * (t0 - Math.ceil(t0))
+    minx += resolution * (Math.ceil(t0) - t0)
     // adjust maxx to fall on last sampled point of segment (might not be the endpoint)
     maxx -= resolution * (t1 - Math.floor(t1))
     // now adjust both by half the pixel size since we sample at pixel center
@@ -152,7 +152,7 @@ async function elevation(geojson) {
       projStr: `+proj=tpeqd +lon_1=${lon0} +lat_1=${lat0} +lon_2=${lon1} +lat_2=${lat1}`,
       minx,
       maxx,
-      offset: t0 - Math.trunc(t0)
+      offset: Math.ceil(t0) - t0
     })
 
     totalDistance += length
