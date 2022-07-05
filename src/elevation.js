@@ -124,7 +124,7 @@ async function elevation(geojson) {
     // how many points will we sample on this segment ?
     const t0 = (totalDistance / resolution) + (skipFirstPoint ? 1 : 0)
     const t1 = (totalDistance + length) / resolution
-    const numPoints = Math.floor(t1) - Math.ceil(t0)
+    const numPoints = 1 + Math.floor(t1) - Math.ceil(t0)
 
     debug(`segment ${allSegments.length} ${numPoints} points [${Math.ceil(t0)}, ${Math.floor(t1)}] [${t0}, ${t1}] start offset ${t0 - Math.trunc(t0)} `)
 
