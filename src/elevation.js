@@ -137,9 +137,9 @@ async function elevation(geojson) {
     let maxx = length / 2
     let minx = -maxx
     // adjust minx to fall on first sampled point of segment (might not be the first point)
-    minx += resolution * (t0 - Math.trunc(t0))
+    minx += resolution * (t0 - Math.ceil(t0))
     // adjust maxx to fall on last sampled point of segment (might not be the endpoint)
-    maxx -= resolution * (t1 - Math.trunc(t1))
+    maxx -= resolution * (t1 - Math.floor(t1))
     // now adjust both by half the pixel size since we sample at pixel center
     minx -= resolution / 2
     maxx += resolution / 2
