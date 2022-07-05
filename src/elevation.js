@@ -87,8 +87,9 @@ async function elevation(geojson) {
   console.log('[K2] elevation requested with parameters: ', { resolution })
   const concurrency = _.get(geojson, 'concurrency', 4)
   const demOverride = _.get(geojson, 'demOverride', '')
+  const corridorWidth = _.get(geojson, 'corridorWidth', 0)
 
-  // 1 arc sec is ~30m at the equator
+  // 1 arc sec is ~30m at the equator (~ 0.0002778deg)
   // srtmv4 is 3arcsec => ~90m
   // gmted2010 has 7.5, 15 and 30 arcsec => ~250m, 500 & 1000m
   let demFile = demOverride
@@ -102,6 +103,17 @@ async function elevation(geojson) {
   demFile = path.join('/mbtiles', demFile)
 
   debug(`using ${demFile} concurrency ${concurrency}`)
+
+  /**/
+  // compute corridor pixels based on selected demFile
+  let corridorPixels = 0
+  if      (demFile === 'srtm.vrt')           corridorPixels = Math.ceil(corridorWidth / 90)
+  else if (demFile === 'GMTED2010/mx75.tif') corridorPixels = Math.ceil(corridorWidth / 250)
+  else if (demFile === 'GMTED2010/mx15.tif') corridorPixels = Math.ceil(corridorWidth / 500)
+  else                                       corridorPixels = Math.ceil(corridorWidth / 1000)
+  corridorPixels = Math.max(1, corridorPixels)
+  const halfCorridorPixels = Math.ceil(corridorPixels / 2)
+  /**/
 
    // prepare work folder
   const workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'elevation-'))
@@ -135,7 +147,7 @@ async function elevation(geojson) {
         const maxx = cs2csOut[1].split('\t')[0]
 
         return exec_bg('gdalwarp', [
-                      '-te', minx, '-5', maxx, '5',
+                      '-te', minx, `-${halfCorridorPixels}`, maxx, halfCorridorPixels,
                       '-t_srs', `"${projStr}"`,
                       '-ts', numPoints, '1',
                       '-r', 'max',
