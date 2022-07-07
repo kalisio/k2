@@ -197,12 +197,13 @@ async function elevation(geojson) {
     const tif = await GeoTIFF.fromFile(task.tif)
     const img = await tif.getImage()
     const res = img.getResolution()
+    const nodata = img.getGDALNoData()
     debug(`${task.tif} res [${res[0]}, ${res[1]}]`)
     const data = await img.readRasters()
     // fill geojson point list
     segments.push(Array.from(data[0], (v, i) => {
       const point = turf_along(task.segment.segment, (task.segment.offset + i) * res[0], { units: 'meters' })
-      point.properties.z = v
+      point.properties.z = v !== nodata ? v : 0
       return point
     }))
   }
