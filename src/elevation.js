@@ -180,6 +180,7 @@ async function elevation(geojson) {
           '-te', segment.minx, -halfCorridorWidth, segment.maxx, halfCorridorWidth,
           '-ts', segment.numPoints, '1',
           '-r', 'max',
+          '-ovr', 'NONE', // do not use overviews for now since they can't be computed using max at the present time (see https://github.com/OSGeo/gdal/issues/3683)
           demFile, outFile ], logFile)
       },
       success: () => {},
