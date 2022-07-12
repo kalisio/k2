@@ -149,6 +149,8 @@ async function elevation(geojson, query) {
     allSegments.push({
       segment,
       distanceOffset: totalDistance,
+      t0,
+      t1,
       numPoints,
       projStr: `+proj=tpeqd +lon_1=${lon0} +lat_1=${lat0} +lon_2=${lon1} +lat_2=${lat1}`,
       minx,
@@ -162,9 +164,12 @@ async function elevation(geojson, query) {
   })
 
   if (!skipFirstPoint) {
-    // extend last segment's maxx to sample past the endpoint
-    allSegments[allSegments.length - 1].numPoints += 1
-    allSegments[allSegments.length - 1].maxx += resolution
+    // Maybe extend last segment's maxx to sample past the endpoint
+    const lastSegment = allSegments[allSegments.length - 1]
+    if (lastSegment.t1 - Math.floor(lastSegment.t1) > 0.5) {
+      lastSegment.numPoints += 1
+      lastSegment.maxx += resolution
+    }
   }
 
   const allTasks = []
@@ -207,13 +212,18 @@ async function elevation(geojson, query) {
     const data = await img.readRasters()
     // fill geojson point list
     segments.push(Array.from(data[0], (v, i) => {
-      // TODO: compute elevation at last segment point since last sampled point is probably not what we want
       const point = turf_along(task.segment.segment, (task.segment.sampleOffset + i) * res[0], { units: 'meters' })
       point.properties.z = v !== nodata ? v : 0
       point.properties.t = task.segment.distanceOffset + ((task.segment.sampleOffset + i) * res[0])
       return point
     }))
   }
+
+  // Adjust last sampled point to match last profile point position, it's elevation match
+  const lastSegment = segments[segments.length - 1]
+  const lastPoint = lastSegment[lastSegment.length - 1]
+  lastPoint.properties.t = totalDistance
+  lastPoint.geometry.coordinates = allTasks[allTasks.length - 1].segment.geometry.coordinates[1]
 
   fs.rmdirSync(workDir, { recursive: true })
 
