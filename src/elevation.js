@@ -218,10 +218,11 @@ async function elevation(geojson, query) {
   }
 
   // Adjust last sampled point to match last profile point position, it's elevation match
+  const lastTask = allTasks[allTasks.length - 1]
   const lastSegment = segments[segments.length - 1]
   const lastPoint = lastSegment[lastSegment.length - 1]
   lastPoint.properties.t = totalDistance
-  lastPoint.geometry.coordinates = allTasks[allTasks.length - 1].segment.segment.geometry.coordinates[1]
+  lastPoint.geometry.coordinates = lastTask.segment.segment.geometry.coordinates[1]
 
   fs.rmdirSync(workDir, { recursive: true })
 
