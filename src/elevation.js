@@ -81,12 +81,12 @@ async function parallel_exec(tasklist, concurrency) {
 }
 
 // based on https://kokoalberti.com/articles/creating-elevation-profiles-with-gdal-and-two-point-equidistant-projection/
-async function elevation(geojson, reqParams) {
+async function elevation(geojson, query) {
   // Extract computing parameters
-  const resolution = _.get(reqParams, 'resolution', _.get(geojson, 'resolution', 30))
-  const concurrency = _.get(reqParams, 'concurrency', _.get(geojson, 'concurrency', 4))
-  const demOverride = _.get(reqParams, 'demOverride', _.get(geojson, 'demOverride', ''))
-  const corridorWidth = _.get(reqParams, 'corridorWidth', _.get(geojson, 'corridorWidth', 0))
+  const resolution = Math.max(30, _.get(query, 'resolution', _.get(geojson, 'resolution', 30)))
+  const concurrency = Math.min(6, _.get(query, 'concurrency', _.get(geojson, 'concurrency', 4)))
+  const demOverride = _.get(query, 'demOverride', _.get(geojson, 'demOverride', ''))
+  const corridorWidth = _.get(query, 'corridorWidth', _.get(geojson, 'corridorWidth', 0))
   const halfCorridorWidth = Math.max(1, corridorWidth / 2)
   console.log('[K2] elevation requested with parameters: ', { resolution, concurrency, demOverride, corridorWidth })
 
