@@ -81,14 +81,14 @@ async function parallel_exec(tasklist, concurrency) {
 }
 
 // based on https://kokoalberti.com/articles/creating-elevation-profiles-with-gdal-and-two-point-equidistant-projection/
-async function elevation(geojson) {
+async function elevation(geojson, reqParams) {
   // Extract computing parameters
-  const resolution = _.get(geojson, 'resolution', 30)
-  console.log('[K2] elevation requested with parameters: ', { resolution })
-  const concurrency = _.get(geojson, 'concurrency', 4)
-  const demOverride = _.get(geojson, 'demOverride', '')
-  const corridorWidth = _.get(geojson, 'corridorWidth', 0)
+  const resolution = _.get(reqParams, 'resolution', _.get(geojson, 'resolution', 30))
+  const concurrency = _.get(reqParams, 'concurrency', _.get(geojson, 'concurrency', 4))
+  const demOverride = _.get(reqParams, 'demOverride', _.get(geojson, 'demOverride', ''))
+  const corridorWidth = _.get(reqParams, 'corridorWidth', _.get(geojson, 'corridorWidth', 0))
   const halfCorridorWidth = Math.max(1, corridorWidth / 2)
+  console.log('[K2] elevation requested with parameters: ', { resolution, concurrency, demOverride, corridorWidth })
 
   // 1 arc sec is ~30m at the equator (~ 0.0002778deg)
   // srtmv4 is 3arcsec => ~90m
@@ -148,11 +148,14 @@ async function elevation(geojson) {
 
     allSegments.push({
       segment,
+      distanceOffset: totalDistance,
       numPoints,
       projStr: `+proj=tpeqd +lon_1=${lon0} +lat_1=${lat0} +lon_2=${lon1} +lat_2=${lat1}`,
       minx,
       maxx,
-      offset: Math.ceil(t0) - t0
+      sampleOffset: Math.ceil(t0) - t0  // gdalwarp extent has been adjusted to sample the correct
+                                        // points, this sampleOffset express the offset of the first sampled point
+                                        // in the segment relative to the first point of the segment (in resolution units)
     })
 
     totalDistance += length
@@ -193,7 +196,9 @@ async function elevation(geojson) {
 
   // we'll have to read each segment as tiff and generate a geojson points from data
   const segments = []
-  for (const task of allTasks) {
+  // for (const task of allTasks) {
+  for (let i = 0; i < allTasks.length; ++i) {
+    const task = allTasks[i]
     const tif = await GeoTIFF.fromFile(task.tif)
     const img = await tif.getImage()
     const res = img.getResolution()
@@ -202,8 +207,10 @@ async function elevation(geojson) {
     const data = await img.readRasters()
     // fill geojson point list
     segments.push(Array.from(data[0], (v, i) => {
-      const point = turf_along(task.segment.segment, (task.segment.offset + i) * res[0], { units: 'meters' })
+      // TODO: compute elevation at last segment point since last sampled point is probably not what we want
+      const point = turf_along(task.segment.segment, (task.segment.sampleOffset + i) * res[0], { units: 'meters' })
       point.properties.z = v !== nodata ? v : 0
+      point.properties.t = task.segment.distanceOffset + ((task.segment.sampleOffset + i) * res[0])
       return point
     }))
   }
