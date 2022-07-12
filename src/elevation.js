@@ -201,9 +201,7 @@ async function elevation(geojson, query) {
 
   // we'll have to read each segment as tiff and generate a geojson points from data
   const segments = []
-  // for (const task of allTasks) {
-  for (let i = 0; i < allTasks.length; ++i) {
-    const task = allTasks[i]
+  for (const task of allTasks) {
     const tif = await GeoTIFF.fromFile(task.tif)
     const img = await tif.getImage()
     const res = img.getResolution()
@@ -223,7 +221,7 @@ async function elevation(geojson, query) {
   const lastSegment = segments[segments.length - 1]
   const lastPoint = lastSegment[lastSegment.length - 1]
   lastPoint.properties.t = totalDistance
-  lastPoint.geometry.coordinates = allTasks[allTasks.length - 1].segment.geometry.coordinates[1]
+  lastPoint.geometry.coordinates = allTasks[allTasks.length - 1].segment.segment.geometry.coordinates[1]
 
   fs.rmdirSync(workDir, { recursive: true })
 
