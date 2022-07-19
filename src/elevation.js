@@ -88,7 +88,8 @@ async function elevation(geojson, query) {
   const demOverride = _.get(query, 'demOverride', _.get(geojson, 'demOverride', ''))
   const corridorWidth = _.get(query, 'corridorWidth', _.get(geojson, 'corridorWidth', 0))
   const halfCorridorWidth = Math.max(1, corridorWidth / 2)
-  console.log('[K2] elevation requested with parameters: ', { resolution, concurrency, demOverride, corridorWidth })
+  const elevationOffset = _.get(query, 'elevationOffset', _.get(geojson, 'elevationOffset', 0))
+  console.log('[K2] elevation requested with parameters: ', { resolution, concurrency, demOverride, corridorWidth, elevationOffset })
 
   // 1 arc sec is ~30m at the equator (~ 0.0002778deg)
   // srtmv4 is 3arcsec => ~90m
@@ -211,7 +212,7 @@ async function elevation(geojson, query) {
     // fill geojson point list
     segments.push(Array.from(data[0], (v, i) => {
       const point = turf_along(task.segment.segment, (task.segment.sampleOffset + i) * res[0], { units: 'meters' })
-      point.properties.z = v !== nodata ? v : 0
+      point.properties.z = elevationOffset + (v !== nodata ? v : 0)
       point.properties.t = task.segment.distanceOffset + ((task.segment.sampleOffset + i) * res[0])
       return point
     }))
