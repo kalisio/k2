@@ -88,7 +88,7 @@ async function elevation(geojson, query) {
   const demOverride = _.get(query, 'demOverride', _.get(geojson, 'demOverride', ''))
   const corridorWidth = _.get(query, 'corridorWidth', _.get(geojson, 'corridorWidth', 0))
   const halfCorridorWidth = Math.max(1, corridorWidth / 2)
-  const elevationOffset = _.get(query, 'elevationOffset', _.get(geojson, 'elevationOffset', 0))
+  const elevationOffset = parseInt(_.get(query, 'elevationOffset', _.get(geojson, 'elevationOffset', 0)), 10)
   console.log('[K2] elevation requested with parameters: ', { resolution, concurrency, demOverride, corridorWidth, elevationOffset })
 
   // 1 arc sec is ~30m at the equator (~ 0.0002778deg)
