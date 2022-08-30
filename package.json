@@ -33,8 +33,8 @@
     "postversion": "git push origin --tags"
   },
   "dependencies": {
-    "@mapbox/geojsonhint": "^3.0.1",
-    "@mapbox/mbtiles": "^0.10.0",
+    "@mapbox/geojsonhint": "^3.1.0",
+    "@mapbox/mbtiles": "^0.12.1",
     "@turf/along": "^6.5.0",
     "@turf/helpers": "^6.5.0",
     "@turf/length": "^6.5.0",
