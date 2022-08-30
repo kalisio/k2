@@ -1,3 +1,13 @@
+#### 2.0.0 (2019-11-09)
+
+##### New features
+
+*  Added the elevation service [#6](https://github.com/kalisio/k2/issues/6)
+
+##### Other Changes
+
+*  Moved to node 16 for the docker image [#13](https://github.com/kalisio/k2/issues/13)
+
 #### 0.2.0 (2019-11-09)
 
 ##### Other Changes
