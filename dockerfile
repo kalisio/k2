@@ -1,4 +1,4 @@
-FROM node:12.22-bullseye-slim
+FROM node:16.17-bullseye-slim
 LABEL maintainer "<contact@kalisio.xyz>"
 
 # Install curl for healthechk purpose
