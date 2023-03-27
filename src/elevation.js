@@ -123,7 +123,7 @@ async function elevation(geojson, query) {
 
     // skip null segments
     if (lon0 === lon1 && lat0 === lat1) {
-      debug(`segment ${segmentIndex} skipped, start point == end point (${lon0},${lat0}) !`)
+      debug(`segment ${segmentIndex} skipped, start point == end point (lon=${lon0} lat=${lat0})`)
       return
     }
 
