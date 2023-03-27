@@ -117,13 +117,13 @@ async function elevation(geojson, query) {
   let totalDistance = 0
   let skipFirstPoint = false
   const allSegments = []
-  turf_segmentEach(feature, (segment) => {
+  turf_segmentEach(feature, (segment, featureIndex, multiFeatureIndex, geometryIndex, segmentIndex) => {
     const [ lon0, lat0 ] = segment.geometry.coordinates[0]
     const [ lon1, lat1 ] = segment.geometry.coordinates[1]
 
     // skip null segments
     if (lon0 === lon1 && lat0 === lat1) {
-      debug(`segment ${allSegments.length} ${numPoints} skipped, start point == end point (${lon0},${lat0}) !`)
+      debug(`segment ${segmentIndex} skipped, start point == end point (${lon0},${lat0}) !`)
       return
     }
 
@@ -134,7 +134,7 @@ async function elevation(geojson, query) {
     const t1 = (totalDistance + length) / resolution
     const numPoints = 1 + Math.floor(t1) - Math.ceil(t0)
 
-    debug(`segment ${allSegments.length} ${numPoints} points [${Math.ceil(t0)}, ${Math.floor(t1)}] [${t0}, ${t1}] start offset ${Math.ceil(t0) - t0} `)
+    debug(`segment ${segmentIndex} ${numPoints} points [${Math.ceil(t0)}, ${Math.floor(t1)}] [${t0}, ${t1}] start offset ${Math.ceil(t0) - t0} `)
 
     // we'll have to skip first point on next segment
     // if the endpoint of this segment must be sampled
@@ -152,7 +152,7 @@ async function elevation(geojson, query) {
     minx -= resolution / 2
     maxx += resolution / 2
 
-    debug(`segment ${allSegments.length} minx maxx [${-length/2}, ${length/2}] adjusted to [${minx}, ${maxx}] segment res ${(maxx - minx) / numPoints}`)
+    debug(`segment ${segmentIndex} minx maxx [${-length/2}, ${length/2}] adjusted to [${minx}, ${maxx}] segment res ${(maxx - minx) / numPoints}`)
 
     allSegments.push({
       segment,
