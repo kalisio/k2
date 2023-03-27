@@ -120,6 +120,13 @@ async function elevation(geojson, query) {
   turf_segmentEach(feature, (segment) => {
     const [ lon0, lat0 ] = segment.geometry.coordinates[0]
     const [ lon1, lat1 ] = segment.geometry.coordinates[1]
+
+    // skip null segments
+    if (lon0 === lon1 && lat0 === lat1) {
+      debug(`segment ${allSegments.length} ${numPoints} skipped, start point == end point (${lon0},${lat0}) !`)
+      return
+    }
+
     const length = turf_length(segment, { units: 'kilometers' }) * 1000
 
     // how many points will we sample on this segment ?
