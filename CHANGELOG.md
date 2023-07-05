@@ -1,3 +1,5 @@
+Please refer to GitHub issues for changelog starting from v2.1: https://github.com/kalisio/k2/issues.
+
 #### 2.0.0 (2019-11-09)
 
 ##### New features
