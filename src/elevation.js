@@ -171,6 +171,11 @@ async function elevation(geojson, query) {
     totalDistance += length
   })
 
+  if (allSegments.length === 0) {
+    // All segments were skipped
+    return turf_featureCollection([])
+  }
+
   if (!skipFirstPoint) {
     // Maybe extend last segment's maxx to sample past the endpoint
     const lastSegment = allSegments[allSegments.length - 1]
