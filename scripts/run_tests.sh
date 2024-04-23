@@ -13,7 +13,7 @@ WORKSPACE_DIR="$(dirname "$ROOT_DIR")"
 ##
 
 NODE_VER=16
-MONGO_VER=4
+MONGO_VER=""
 CI_STEP_NAME="Run tests"
 CODE_COVERAGE=false
 while getopts "m:n:cr:" option; do
@@ -42,4 +42,4 @@ done
 ## Run tests
 ##
 
-run_lib_tests "$ROOT_DIR" "$CODE_COVERAGE" "$NODE_VER"
+run_lib_tests "$ROOT_DIR" "$CODE_COVERAGE" "$NODE_VER" "$MONGO_VER"
