@@ -59,7 +59,7 @@ docker login --username "$KALISIO_DOCKERHUB_USERNAME" --password-stdin < "$KALIS
 DOCKER_BUILDKIT=1 docker build \
     -f Dockerfile \
     -t "$IMAGE_NAME:$IMAGE_TAG" \
-    "$WORKSPACE_DIR"
+    "$ROOT_DIR"
 
 if [ "$PUBLISH" = true ]; then
     docker push "$IMAGE_NAME:$IMAGE_TAG"
