@@ -15,12 +15,12 @@ init_github_run_tests() {
     install_reqs age sops nvm node16 cc_test_reporter
 }
 
-init_github_build_service() {
-    install_reqs age sops
-}
-
 init_github_additional_tests() {
     install_reqs age sops nvm node16 node18 node20
+}
+
+init_github_build_service() {
+    install_reqs age sops
 }
 
 begin_group "Init $CI_ID for $JOB_ID"
