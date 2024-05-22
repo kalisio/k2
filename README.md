@@ -1,6 +1,11 @@
 # k2
 
-[![Build Status](https://app.travis-ci.com/kalisio/k2.png?branch=master)](https://travis-ci.com/kalisio/k2)
+[![Latest Release](https://img.shields.io/github/v/tag/kalisio/k2?sort=semver&label=latest)](https://github.com/kalisio/k2/releases)
+[![CI](https://github.com/kalisio/k2/actions/workflows/main.yaml/badge.svg)](https://github.com/kalisio/k2/actions/workflows/main.yaml)
+[![Code Climate](https://codeclimate.com/github/kalisio/k2/badges/gpa.svg)](https://codeclimate.com/github/kalisio/k2)
+[![Test Coverage](https://codeclimate.com/github/kalisio/k2/badges/coverage.svg)](https://codeclimate.com/github/kalisio/k2/coverage)
+[![Dependency Status](https://img.shields.io/david/kalisio/k2.svg?style=flat-square)](https://david-dm.org/kalisio/k2)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ![Image](./k2.png)
 
