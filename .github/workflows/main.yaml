@@ -31,7 +31,7 @@ jobs:
         exclude:
           - node: 16
             mongo: 4
-    name: Additional tests (node ${{ matrix.node }}, mongo ${{ matrix.mongo }})
+    name: Additional tests
     if: ${{ contains(github.event.head_commit.message, 'additional tests') }}
     runs-on: ubuntu-22.04
     steps:
