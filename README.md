@@ -38,9 +38,8 @@ The following query parameters are available :
 | `demOverride`   | The name of an elevation dataset to use. k2 will auto select a dataset if empty.                                                                                  | `""`          |
 | `corridorWidth` | The width, in meters, of an imaginary corridor to consider while sampling elevation. The computed elevation will be the max elevation of all the covered samples. | `0`           |
 
-::: info
-The elevation computation will set to `0` any source sample whith a `nodata` value.
-:::
+> [!IMPORTANT]
+> The elevation computation will set to `0` any source sample whith a `nodata` value.
 
 ## Building
 
