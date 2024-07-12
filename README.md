@@ -10,6 +10,38 @@
 
 A docker container that runs a 3D terrain tiles server stored as quantized meshes in MBTiles for Cesium.
 
+## API
+
+### /healthcheck (GET)
+
+Check for service's health, return a json object with a single member `isRunning`.
+
+### /:z/:x/:y.terrain (GET)
+
+Get an individual tile from the MBTile table (ie. the tile located at `x`,`y`,`z`).
+
+### /layer.json (GET)
+
+Return layer metadata in json format.
+
+### /elevation?resolution=res&concurrency=num&demOverride=dem (POST)
+
+Request an elevation profile computation over the given GeoJSON feature.
+The `POST` body must contain the GeoJSON to use as elevation profile source. If the GeoJSON is a `FeatureCollection`, then only the first feature will be used in the computation.
+
+The following query parameters are available :
+
+| Name              | Description                                                                                                                                                       | Default value |
+|-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| `resolution`      | Interval, in meters, between two elevation samples over the profile source                                                                                        | `30` meters   |
+| `concurrency`     | How many segments will be computed in parallel server side                                                                                                        | `4`           |
+| `demOverride`     | The name of an elevation dataset to use. k2 will auto select a dataset if empty.                                                                                  | `""`          |
+| `corridorWidth`   | The width, in meters, of an imaginary corridor to consider while sampling elevation. The computed elevation will be the max elevation of all the covered samples. | `0`           |
+
+::: info
+The elevation computation will set to `0` any source sample whith a `nodata` value.
+:::
+
 ## Building
 
 ### Manual build 
