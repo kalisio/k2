@@ -1,12 +1,15 @@
+ARG DEBIAN_VERSION=bookworm
+ARG NODE_VERSION=20
+
 # Build
-FROM node:16.17-bullseye-slim AS builder
+FROM node:${NODE_VERSION}-${DEBIAN_VERSION}-slim AS builder
 ENV HOME /k2
 COPY . ${HOME}
 WORKDIR ${HOME}
 RUN yarn
 
 # Copy to slim image
-FROM node:16.17-bullseye-slim
+FROM node:${NODE_VERSION}-${DEBIAN_VERSION}-slim
 LABEL maintainer "<contact@kalisio.xyz>"
 
 # In case you use an apt proxy somewhere
