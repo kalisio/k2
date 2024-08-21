@@ -8,7 +8,9 @@
 
 ![Image](./k2.png)
 
-A docker container that runs a 3D terrain tiles server stored as quantized meshes in MBTiles for Cesium.
+A lightweight service that exposes different endpoints related to terrain data:
+- a **3D terrain tiles** endpoint that let you access quantized meshes in MBTiles for Cesium,
+- an **elevation** endpoint that let you compute the elevation of the terrain under a linear geographical element.
 
 ## API
 
@@ -26,17 +28,31 @@ Return layer metadata in json format.
 
 ### /elevation?resolution=res (POST)
 
-Request an elevation profile computation over the given GeoJSON feature.
-The `POST` body must contain the GeoJSON to use as elevation profile source. If the GeoJSON is a `FeatureCollection`, then only the first feature will be used in the computation.
+Computes the elevation of the terrain under a linear geographical element (i.e. a path/trajectory) based on available [elevation data](../elevation-data/gmted-2010.md) and a requested target resolution. By default, the elevation dataset will be selected depending on the resolution according to the following rules:
+* resolution < 250m: [SRTM v4](https://csidotinfo.wordpress.com/data/srtm-90m-digital-elevation-database-v4-1/),
+* resolution < 500m: [GMTED 2010](https://www.usgs.gov/coastal-changes-and-impacts/gmted2010) - Maximum 7.5 arc-seconds grid,
+* resolution < 1000m: [GMTED 2010](https://www.usgs.gov/coastal-changes-and-impacts/gmted2010) - Maximum 15 arc-seconds grid,
+* otherwise: [GMTED 2010](https://www.usgs.gov/coastal-changes-and-impacts/gmted2010) - Maximum 30 arc-seconds grid.
 
-The following query parameters are available :
+> [!WARNING]
+> When GMTED dataset is selected the **maximum elevation** within each elevation grid cell will be returned, otherwise the **mean elevation** is returned.
 
+The `elevation` endpoint allows to post a body that must conform a **GeoJSON** feature defining the target geographical element `geometry` with the following configuration properties: 
 | Name            | Description                                                                                                                                                       | Default value |
 |-----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
 | `resolution`    | Interval, in meters, between two elevation samples over the profile source.                                                                                       | `30` meters   |
 | `concurrency`   | How many segments will be computed in parallel server side.                                                                                                       | `4`           |
-| `demOverride`   | The name of an elevation dataset to use. k2 will auto select a dataset if empty.                                                                                  | `""`          |
-| `corridorWidth` | The width, in meters, of an imaginary corridor to consider while sampling elevation. The computed elevation will be the max elevation of all the covered samples. | `0`           |
+| `demOverride`   | The name of an elevation dataset to use for custom datasets. k2 will auto select a dataset if empty.                                                              | `""`          |
+| `corridorWidth` | The width, in meters, of a corridor to consider "around" the path for computation. The computed elevation will be the max elevation of all the covered samples.   | `0`           |
+
+The `POST` body must contain the GeoJSON to use as elevation profile source. If the GeoJSON is a `FeatureCollection`, then only the first feature will be used in the computation.
+
+> [!TIP]
+> The configuration properties can also be passed as query parameters.
+
+The endpoint result is a **GeoJSON** feature collection defining the sample points `geometry` with the following `properties`: 
+* `z` defines the computed elevation of the sampled point taking margin into account,
+* `t` defines the computed curvilinear abscissa of the sampled point along the path.
 
 > [!IMPORTANT]
 > The elevation computation will set to `0` any source sample whith a `nodata` value.
