@@ -30,7 +30,7 @@ Return layer metadata in json format.
 
 ### /elevation?resolution=res (POST)
 
-Computes the elevation of the terrain under a linear geographical element (i.e. a path/trajectory) based on available [elevation data](../elevation-data/gmted-2010.md) and a requested target resolution. By default, the elevation dataset will be selected depending on the resolution according to the following rules:
+Computes the elevation of the terrain under a linear geographical element (i.e. a path/trajectory) based on available elevation data and a requested target resolution. By default, the elevation dataset will be selected depending on the resolution according to the following rules:
 * resolution < 250m: [SRTM v4](https://csidotinfo.wordpress.com/data/srtm-90m-digital-elevation-database-v4-1/),
 * resolution < 500m: [GMTED 2010](https://www.usgs.gov/coastal-changes-and-impacts/gmted2010) - Maximum 7.5 arc-seconds grid,
 * resolution < 1000m: [GMTED 2010](https://www.usgs.gov/coastal-changes-and-impacts/gmted2010) - Maximum 15 arc-seconds grid,
