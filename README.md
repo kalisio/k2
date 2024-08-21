@@ -67,17 +67,10 @@ You can build the image with the following command:
 docker build -t <your-image-name> .
 ```
 
-### Automatic build using Travis CI
+### Automatic build using GitHub Actions
 
-This project is configured to use Travis to build and push the image on the Kalisio's Docker Hub.
+This project is configured to use GitHub Actions to build and push the image on the Kalisio's Docker Hub.
 The built image is tagged using the `version` property in the `package.json` file.
-
-To enable Travis to do the job, you must define the following variable in the corresponding Travis project:
-
-| Variable  | Description |
-|-----------| ------------|
-| `DOCKER_USER` | your username |
-| `DOCKER_PASSWORD` | your password |
 
 ## Deploying
 
