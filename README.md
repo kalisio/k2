@@ -6,11 +6,13 @@
 [![Test Coverage](https://codeclimate.com/github/kalisio/k2/badges/coverage.svg)](https://codeclimate.com/github/kalisio/k2/coverage)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-![Image](./k2.png)
-
 A lightweight service that exposes different endpoints related to terrain data:
 - a **3D terrain tiles** endpoint that let you access quantized meshes in MBTiles for Cesium,
 - an **elevation** endpoint that let you compute the elevation of the terrain under a linear geographical element.
+
+![3D Tiles](./k2-3D-tiles.png)
+
+![Elevation computation](./k2-elevation.png)
 
 ## API
 
