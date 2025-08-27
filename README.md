@@ -94,6 +94,16 @@ When releasing a patch, minor or major version, i.e. the following tasks have to
 
 The command `npm run release:<type>`, where  `<type>` is either `patch`, `minor` or `major`, will do the job for you ! 
 
+## Converting GeoTIFF to MBTiles
+
+1. Run a [cesium-terrain-builder-docker](https://github.com/tum-gis/cesium-terrain-builder-docker) container with a volume mounted on the folder with your GeoTIFF files : `docker run -it --name ctb -v "./path/to/geotiff/:/data" tumgis/ctb-quantized-mesh`
+2. Build a virtual dataset with all of the GeoTIFF files : `gdalbuildvrt dataset.vrt /data/*.tif`
+2. Reproject data to EPSG:4326 : `gdalwarp -s_srs EPSG:2154 -t_srs EPSG:4326 dataset.vrt dataset-EPSG4326.vrt`
+3. Build overview images : `gdaladdo -r average dataset-EPSG4326.vrt 2 4 8 16`
+4. Generate quantized meshes with [cesium-terrain-builder-docker](https://github.com/tum-gis/cesium-terrain-builder-docker?tab=readme-ov-file#create-cesium-terrain-files) : `ctb-tile -f Mesh -C -N -o /target/path/for/generated/quantized/meshes/ dataset-EPSG4326.vrt`
+5. Generate layer.json : `ctb-tile -f Mesh -C -N -l -o /target/path/for/generated/quantized/meshes/ dataset-EPSG4326.vrt`
+6. Outside of the container, [get](./scripts/quantized_mesh2mbtiles.py) the `quantized_mesh2mbtiles.py` script from this project, and generate MBTiles file from quantized meshes : `python quantized_mesh2mbtiles.py /path/to/quantized/meshes/ terrain.mbtiles`
+
 ## Authors
 
 This project is sponsored by 
