@@ -14,19 +14,33 @@ A lightweight service that exposes different endpoints related to terrain data:
 
 ![Elevation computation](./k2-elevation.png)
 
+You can serve either serve:
+- a single terrain file by specifying it through the `TERRAIN_FILEPATH` environment variable,
+- multiple terrain files in a folder by specifying it through the `TERRAIN_FOLDER` environment variable, all `*.mbtiles` file will be served.
+
 ## API
 
 ### /healthcheck (GET)
 
 Check for service's health, return a json object with a single member `isRunning`.
 
-### /:z/:x/:y.terrain (GET)
-
-Get an individual tile from the MBTile table (ie. the tile located at `x`,`y`,`z`).
-
 ### /layer.json (GET)
 
-Return layer metadata in json format.
+Return layer metadata in json format for a single terrain file.
+
+### /:z/:x/:y.terrain (GET)
+
+Get an individual tile for a single terrain file (i.e. the tile located at `x`,`y`,`z`).
+
+### :terrain/layer.json (GET)
+
+Return layer metadata in json format for the given terrain file when multiple fils are server from a folder.
+The `terrain` parameter is expected to be the terrain file basename in lower case without the extension, e.g. `myterrain` for the `/mbtiles/myterrain.mbtiles` file.
+
+### :terrain/:z/:x/:y.terrain (GET)
+
+Get an individual tile for given terrain file when multiple fils are server from a folder (i.e. the tile located at `x`,`y`,`z`).
+The `terrain` parameter is expected to be the terrain file basename lower case without the extension, e.g. `myterrain` for the `/mbtiles/myterrain.mbtiles` file.
 
 ### /elevation?resolution=res (POST)
 
