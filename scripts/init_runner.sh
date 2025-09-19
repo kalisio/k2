@@ -12,7 +12,7 @@ THIS_DIR=$(dirname "$THIS_FILE")
 ### Github Actions
 
 init_github_run_tests() {
-    install_reqs age sops nvm node20 cc_test_reporter
+    install_reqs age sops nvm node20
 }
 
 init_github_additional_tests() {
