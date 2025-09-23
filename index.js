@@ -74,12 +74,14 @@ async function run() {
       const stat = fs.lstatSync(filename)
       if (!stat.isDirectory() && filename.toLowerCase().endsWith('.mbtiles')) {
         const prefix = path.basename(filename.toLowerCase(), '.mbtiles')
-        console.log('[K2] prepare serving', filename, prefix)
+        console.log(`[K2] prepare serving ${filename} on path ${prefix}`)
         await serveTerrain(filename, prefix)
       }
     }
-  } else {
-    console.log('[K2] prepare serving', terrainFile)
+  }
+  // Single terrain files mode ?
+  if (terrainFile) {
+    console.log(`[K2] prepare serving ${terrainFile} on /`)
     await serveTerrain(terrainFile)
   }
   // Elevation
